@@ -1,0 +1,428 @@
+<!--
+  Scalelist Mega Menu — standalone HTML/CSS/JS
+  Paste into a WordPress Elementor HTML widget (or any HTML page).
+  No external dependencies. Icons are inline SVGs.
+-->
+<style>
+  .sl-nav, .sl-nav * { box-sizing: border-box; }
+  .sl-nav {
+    --sl-bg: #ffffff;
+    --sl-fg: #0a0a0a;
+    --sl-muted: #6b7280;
+    --sl-border: #e5e7eb;
+    --sl-hover: #f5f5f5;
+    --sl-shadow: 0 24px 40px -24px rgba(10,10,10,0.18);
+    position: sticky; top: 0; z-index: 50; width: 100%;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: saturate(180%) blur(8px);
+    -webkit-backdrop-filter: saturate(180%) blur(8px);
+    border-bottom: 1px solid var(--sl-border);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--sl-fg);
+  }
+  .sl-nav a { color: inherit; text-decoration: none; }
+  .sl-nav button { font: inherit; background: none; border: 0; color: inherit; cursor: pointer; }
+
+  .sl-bar {
+    max-width: 1280px; margin: 0 auto;
+    height: 64px; padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .sl-logo { display: inline-flex; align-items: center; gap: 8px; }
+  .sl-logo-mark {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: var(--sl-fg); color: var(--sl-bg);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .sl-logo-text { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+
+  .sl-menu { display: none; align-items: center; gap: 4px; list-style: none; padding: 0; margin: 0; }
+  .sl-menu li { position: relative; }
+  .sl-trigger, .sl-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 6px;
+    font-size: 14px; font-weight: 500; color: var(--sl-fg);
+    transition: background-color .15s ease;
+  }
+  .sl-trigger:hover, .sl-link:hover, .sl-trigger[aria-expanded="true"] { background: var(--sl-hover); }
+  .sl-chev { width: 16px; height: 16px; transition: transform .2s ease; }
+  .sl-trigger[aria-expanded="true"] .sl-chev { transform: rotate(180deg); }
+
+  .sl-ctas { display: none; align-items: center; gap: 8px; }
+  .sl-login { font-size: 14px; font-weight: 500; color: var(--sl-muted); padding: 8px 12px; }
+  .sl-login:hover { color: var(--sl-fg); }
+  .sl-signup {
+    background: var(--sl-fg); color: var(--sl-bg);
+    padding: 8px 16px; border-radius: 6px;
+    font-size: 14px; font-weight: 600;
+    transition: opacity .15s ease;
+  }
+  .sl-signup:hover { opacity: .9; }
+
+  .sl-burger {
+    display: inline-flex; align-items: center; justify-content: center;
+    padding: 8px; border-radius: 6px; color: var(--sl-fg);
+  }
+  .sl-burger:hover { background: var(--sl-hover); }
+  .sl-burger svg { width: 24px; height: 24px; }
+  .sl-burger .icon-close { display: none; }
+  .sl-burger[aria-expanded="true"] .icon-open { display: none; }
+  .sl-burger[aria-expanded="true"] .icon-close { display: block; }
+
+  /* Mega menus (desktop) */
+  .sl-mega {
+    position: absolute; left: 0; right: 0; top: 100%;
+    width: 100%;
+    background: var(--sl-bg);
+    border-bottom: 1px solid var(--sl-border);
+    box-shadow: var(--sl-shadow);
+    opacity: 0; transform: translateY(-8px);
+    pointer-events: none;
+    transition: opacity .2s ease, transform .2s ease;
+    display: none;
+  }
+  .sl-mega.is-open { opacity: 1; transform: translateY(0); pointer-events: auto; }
+  .sl-mega-inner {
+    max-width: 1280px; margin: 0 auto;
+    padding: 40px 24px;
+    display: grid; grid-template-columns: 1fr; gap: 48px;
+  }
+  @media (min-width: 1024px) {
+    .sl-mega-inner.cols-12 { grid-template-columns: 4fr 1px 7fr; gap: 48px; }
+  }
+  .sl-divider { background: var(--sl-border); width: 1px; height: 100%; }
+  .sl-section-title {
+    margin: 0 0 20px; font-size: 12px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--sl-muted);
+  }
+  .sl-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr; gap: 4px; }
+  .sl-list.two-col { gap: 4px 12px; }
+  @media (min-width: 640px) { .sl-list.two-col { grid-template-columns: 1fr 1fr; } }
+
+  .sl-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 12px; border-radius: 8px;
+    transition: background-color .15s ease;
+  }
+  .sl-item:hover { background: var(--sl-hover); }
+  .sl-item-ico {
+    flex: 0 0 auto; width: 36px; height: 36px;
+    border: 1px solid var(--sl-border); border-radius: 6px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--sl-fg); background: var(--sl-bg);
+    margin-top: 2px;
+  }
+  .sl-item-ico svg { width: 18px; height: 18px; }
+  .sl-item-body { display: flex; flex-direction: column; }
+  .sl-item-title { font-size: 14px; font-weight: 600; color: var(--sl-fg); }
+  .sl-item-desc { font-size: 14px; color: var(--sl-muted); }
+
+  .sl-item.simple { align-items: center; }
+  .sl-item.simple .sl-item-ico { margin-top: 0; }
+
+  .ico-red { color: #ef4444; }
+  .ico-blue { color: #2563eb; }
+  .ico-pink { color: #ec4899; }
+  .ico-indigo { color: #6366f1; }
+  .ico-muted { color: var(--sl-muted); }
+
+  /* Mobile drawer (slide down) */
+  .sl-mobile {
+    position: absolute; left: 0; right: 0; top: 100%;
+    background: var(--sl-bg); border-bottom: 1px solid var(--sl-border);
+    overflow: hidden; max-height: 0; opacity: 0;
+    transition: max-height .3s ease, opacity .3s ease;
+    z-index: 40;
+  }
+  .sl-mobile.is-open { max-height: calc(100vh - 64px); opacity: 1; overflow-y: auto; }
+  .sl-mobile-inner { padding: 16px; display: flex; flex-direction: column; gap: 4px; }
+  .sl-msec { border-bottom: 1px solid var(--sl-border); }
+  .sl-msec:last-of-type { border-bottom: 0; }
+  .sl-msec-btn {
+    width: 100%; display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; border-radius: 6px;
+    font-size: 16px; font-weight: 500; color: var(--sl-fg);
+  }
+  .sl-msec-btn:hover { background: var(--sl-hover); }
+  .sl-msec-body { display: none; padding: 0 8px 12px; }
+  .sl-msec.is-open .sl-msec-body { display: block; }
+  .sl-msec.is-open .sl-chev { transform: rotate(180deg); }
+  .sl-mgroup-title {
+    margin: 12px 0 4px; padding: 0 12px;
+    font-size: 12px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.14em; color: var(--sl-muted);
+  }
+  .sl-mlink {
+    display: block; padding: 12px 16px; border-radius: 6px;
+    font-size: 16px; font-weight: 500; color: var(--sl-fg);
+  }
+  .sl-mlink:hover { background: var(--sl-hover); }
+  .sl-mctas { padding-top: 16px; margin-top: 16px; border-top: 1px solid var(--sl-border); display: flex; flex-direction: column; gap: 8px; }
+  .sl-mctas .sl-signup { display: block; text-align: center; padding: 12px 16px; border-radius: 6px; }
+
+  @media (min-width: 1024px) {
+    .sl-menu { display: flex; }
+    .sl-ctas { display: flex; }
+    .sl-burger { display: none; }
+    .sl-mega { display: block; }
+    .sl-mobile { display: none; }
+  }
+</style>
+
+<header class="sl-nav" id="slNav">
+  <nav class="sl-bar">
+    <a href="/" class="sl-logo">
+      <span class="sl-logo-mark">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <path d="M5 17 L11 11 M9 17 L15 11 M13 17 L19 11" />
+        </svg>
+      </span>
+      <span class="sl-logo-text">Scalelist</span>
+    </a>
+
+    <ul class="sl-menu">
+      <li>
+        <button type="button" class="sl-trigger" data-menu="platform" aria-expanded="false">
+          Platform
+          <svg class="sl-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+      </li>
+      <li>
+        <button type="button" class="sl-trigger" data-menu="resources" aria-expanded="false">
+          Resources
+          <svg class="sl-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+      </li>
+      <li><a href="#" class="sl-link">Customers</a></li>
+      <li><a href="#" class="sl-link">Pricing</a></li>
+    </ul>
+
+    <div class="sl-ctas">
+      <a href="#" class="sl-login">Log in</a>
+      <a href="#" class="sl-signup">Sign up free</a>
+    </div>
+
+    <button type="button" class="sl-burger" id="slBurger" aria-label="Toggle menu" aria-expanded="false">
+      <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </nav>
+
+  <!-- Platform mega menu -->
+  <div class="sl-mega" data-mega="platform">
+    <div class="sl-mega-inner cols-12">
+      <section>
+        <h3 class="sl-section-title">Overview</h3>
+        <ul class="sl-list">
+          <li>
+            <a href="https://scalelist.com/scalelist-the-field/" class="sl-item">
+              <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg></span>
+              <span class="sl-item-body">
+                <span class="sl-item-title">Our Data</span>
+                <span class="sl-item-desc">Learn more about our data</span>
+              </span>
+            </a>
+          </li>
+          <li>
+            <a href="https://scalelist.com/customers/" class="sl-item">
+              <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+              <span class="sl-item-body">
+                <span class="sl-item-title">Customers</span>
+                <span class="sl-item-desc">See how companies succeed with Scalelist</span>
+              </span>
+            </a>
+          </li>
+        </ul>
+      </section>
+      <div class="sl-divider"></div>
+      <section>
+        <h3 class="sl-section-title">Features</h3>
+        <ul class="sl-list two-col">
+          <li><a href="#" class="sl-item">
+            <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+            <span class="sl-item-body"><span class="sl-item-title">Email Finder</span><span class="sl-item-desc">Discover contact details.</span></span>
+          </a></li>
+          <li><a href="#" class="sl-item">
+            <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
+            <span class="sl-item-body"><span class="sl-item-title">Email Verifier</span><span class="sl-item-desc">Keep bounce rates low.</span></span>
+          </a></li>
+          <li><a href="#" class="sl-item">
+            <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" y1="8" x2="12" y2="8"/><line x1="3.95" y1="6.06" x2="8.54" y2="14"/><line x1="10.88" y1="21.94" x2="15.46" y2="14"/></svg></span>
+            <span class="sl-item-body"><span class="sl-item-title">Chrome Extension</span><span class="sl-item-desc">Data from Anywhere.</span></span>
+          </a></li>
+          <li><a href="#" class="sl-item">
+            <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span>
+            <span class="sl-item-body"><span class="sl-item-title">Lead Mobile Finder</span><span class="sl-item-desc">Reach decision-makers.</span></span>
+          </a></li>
+          <li><a href="#" class="sl-item">
+            <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.439 7.85c-.049.322.059.648.289.878l1.568 1.568c.47.47.706 1.087.706 1.704s-.235 1.233-.706 1.704l-1.611 1.611a.98.98 0 0 1-.837.276c-.47-.07-.802-.48-.968-.925a2.501 2.501 0 1 0-3.214 3.214c.446.166.855.497.925.968a.98.98 0 0 1-.276.837l-1.61 1.61a2.404 2.404 0 0 1-1.705.707 2.402 2.402 0 0 1-1.704-.706l-1.568-1.568a1.026 1.026 0 0 0-.877-.29c-.493.074-.84.504-1.02.968a2.5 2.5 0 1 1-3.237-3.237c.464-.18.894-.527.967-1.02a1.026 1.026 0 0 0-.289-.877l-1.568-1.568A2.402 2.402 0 0 1 1.998 12c0-.617.236-1.234.706-1.704L4.23 8.77c.24-.24.581-.353.917-.303.515.077.877.528 1.073 1.01a2.5 2.5 0 1 0 3.259-3.259c-.482-.196-.933-.558-1.01-1.073-.05-.336.062-.676.303-.917l1.525-1.525A2.402 2.402 0 0 1 12 1.998c.617 0 1.234.236 1.704.706l1.568 1.568c.23.23.556.338.877.29.493-.074.84-.504 1.02-.968a2.5 2.5 0 1 1 3.237 3.237c-.464.18-.894.527-.967 1.02Z"/></svg></span>
+            <span class="sl-item-body"><span class="sl-item-title">Integrations</span><span class="sl-item-desc">Connect CRM tools.</span></span>
+          </a></li>
+          <li><a href="#" class="sl-item">
+            <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
+            <span class="sl-item-body"><span class="sl-item-title">API</span><span class="sl-item-desc">Build on Scalelist.</span></span>
+          </a></li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <!-- Resources mega menu -->
+  <div class="sl-mega" data-mega="resources">
+    <div class="sl-mega-inner">
+      <section>
+        <h3 class="sl-section-title">Resources</h3>
+        <ul class="sl-list two-col">
+          <li><a href="#" class="sl-item simple">
+            <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
+            <span class="sl-item-title">Blog</span>
+          </a></li>
+          <li><a href="#" class="sl-item simple">
+            <span class="sl-item-ico ico-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg></span>
+            <span class="sl-item-title">Youtube</span>
+          </a></li>
+          <li><a href="#" class="sl-item simple">
+            <span class="sl-item-ico ico-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span>
+            <span class="sl-item-title">Academy</span>
+          </a></li>
+          <li><a href="#" class="sl-item simple">
+            <span class="sl-item-ico ico-muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+            <span class="sl-item-title">Help Center</span>
+          </a></li>
+          <li><a href="#" class="sl-item simple">
+            <span class="sl-item-ico ico-pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></span>
+            <span class="sl-item-title">Affiliate Program</span>
+          </a></li>
+          <li><a href="#" class="sl-item simple">
+            <span class="sl-item-ico ico-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
+            <span class="sl-item-title">For Sales</span>
+          </a></li>
+          <li><a href="#" class="sl-item simple">
+            <span class="sl-item-ico ico-indigo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+            <span class="sl-item-title">For Founders</span>
+          </a></li>
+        </ul>
+      </section>
+    </div>
+  </div>
+
+  <!-- Mobile drawer -->
+  <div class="sl-mobile" id="slMobile">
+    <div class="sl-mobile-inner">
+      <div class="sl-msec" data-msec="platform">
+        <button type="button" class="sl-msec-btn">
+          Platform
+          <svg class="sl-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="sl-msec-body">
+          <div class="sl-mgroup-title">Overview</div>
+          <ul class="sl-list">
+            <li><a href="https://scalelist.com/scalelist-the-field/" class="sl-item">
+              <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg></span>
+              <span class="sl-item-body"><span class="sl-item-title">Our Data</span><span class="sl-item-desc">Learn more about our data</span></span>
+            </a></li>
+            <li><a href="https://scalelist.com/customers/" class="sl-item">
+              <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+              <span class="sl-item-body"><span class="sl-item-title">Customers</span><span class="sl-item-desc">See how companies succeed with Scalelist</span></span>
+            </a></li>
+          </ul>
+          <div class="sl-mgroup-title">Features</div>
+          <ul class="sl-list">
+            <li><a href="#" class="sl-item"><span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><span class="sl-item-body"><span class="sl-item-title">Email Finder</span><span class="sl-item-desc">Discover contact details.</span></span></a></li>
+            <li><a href="#" class="sl-item"><span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span><span class="sl-item-body"><span class="sl-item-title">Email Verifier</span><span class="sl-item-desc">Keep bounce rates low.</span></span></a></li>
+            <li><a href="#" class="sl-item"><span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" y1="8" x2="12" y2="8"/><line x1="3.95" y1="6.06" x2="8.54" y2="14"/><line x1="10.88" y1="21.94" x2="15.46" y2="14"/></svg></span><span class="sl-item-body"><span class="sl-item-title">Chrome Extension</span><span class="sl-item-desc">Data from Anywhere.</span></span></a></li>
+            <li><a href="#" class="sl-item"><span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span><span class="sl-item-body"><span class="sl-item-title">Lead Mobile Finder</span><span class="sl-item-desc">Reach decision-makers.</span></span></a></li>
+            <li><a href="#" class="sl-item"><span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span><span class="sl-item-body"><span class="sl-item-title">Integrations</span><span class="sl-item-desc">Connect CRM tools.</span></span></a></li>
+            <li><a href="#" class="sl-item"><span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span><span class="sl-item-body"><span class="sl-item-title">API</span><span class="sl-item-desc">Build on Scalelist.</span></span></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="sl-msec" data-msec="resources">
+        <button type="button" class="sl-msec-btn">
+          Resources
+          <svg class="sl-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        </button>
+        <div class="sl-msec-body">
+          <ul class="sl-list">
+            <li><a href="#" class="sl-item simple"><span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span><span class="sl-item-title">Blog</span></a></li>
+            <li><a href="#" class="sl-item simple"><span class="sl-item-ico ico-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg></span><span class="sl-item-title">Youtube</span></a></li>
+            <li><a href="#" class="sl-item simple"><span class="sl-item-ico ico-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><span class="sl-item-title">Academy</span></a></li>
+            <li><a href="#" class="sl-item simple"><span class="sl-item-ico ico-muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><span class="sl-item-title">Help Center</span></a></li>
+            <li><a href="#" class="sl-item simple"><span class="sl-item-ico ico-pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/></svg></span><span class="sl-item-title">Affiliate Program</span></a></li>
+            <li><a href="#" class="sl-item simple"><span class="sl-item-ico ico-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span><span class="sl-item-title">For Sales</span></a></li>
+            <li><a href="#" class="sl-item simple"><span class="sl-item-ico ico-indigo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg></span><span class="sl-item-title">For Founders</span></a></li>
+          </ul>
+        </div>
+      </div>
+
+      <a href="#" class="sl-mlink">Customers</a>
+      <a href="#" class="sl-mlink">Pricing</a>
+
+      <div class="sl-mctas">
+        <a href="#" class="sl-mlink">Log in</a>
+        <a href="#" class="sl-signup">Sign up free</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+(function(){
+  var nav = document.getElementById('slNav');
+  if (!nav) return;
+  var triggers = nav.querySelectorAll('.sl-trigger');
+  var megas = nav.querySelectorAll('.sl-mega');
+  var burger = document.getElementById('slBurger');
+  var mobile = document.getElementById('slMobile');
+  var msecs = nav.querySelectorAll('.sl-msec');
+  var closeTimer = null;
+  var current = null;
+
+  function openMenu(key){
+    current = key;
+    triggers.forEach(function(t){ t.setAttribute('aria-expanded', t.dataset.menu === key ? 'true' : 'false'); });
+    megas.forEach(function(m){ m.classList.toggle('is-open', m.dataset.mega === key); });
+  }
+  function closeMenu(){
+    current = null;
+    triggers.forEach(function(t){ t.setAttribute('aria-expanded', 'false'); });
+    megas.forEach(function(m){ m.classList.remove('is-open'); });
+  }
+  function scheduleClose(){
+    if (closeTimer) clearTimeout(closeTimer);
+    closeTimer = setTimeout(closeMenu, 120);
+  }
+  function cancelClose(){
+    if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
+  }
+
+  triggers.forEach(function(t){
+    var li = t.parentElement;
+    li.addEventListener('mouseenter', function(){ cancelClose(); openMenu(t.dataset.menu); });
+    li.addEventListener('mouseleave', scheduleClose);
+    t.addEventListener('click', function(e){
+      e.preventDefault();
+      if (current === t.dataset.menu) closeMenu(); else openMenu(t.dataset.menu);
+    });
+  });
+  megas.forEach(function(m){
+    m.addEventListener('mouseenter', cancelClose);
+    m.addEventListener('mouseleave', scheduleClose);
+  });
+
+  // Mobile
+  burger.addEventListener('click', function(){
+    var isOpen = mobile.classList.toggle('is-open');
+    burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+  msecs.forEach(function(sec){
+    var btn = sec.querySelector('.sl-msec-btn');
+    btn.addEventListener('click', function(){
+      msecs.forEach(function(s){ if (s !== sec) s.classList.remove('is-open'); });
+      sec.classList.toggle('is-open');
+    });
+  });
+})();
+</script>
