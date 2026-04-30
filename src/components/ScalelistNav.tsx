@@ -192,9 +192,13 @@ export function ScalelistNav() {
         </div>
       </div>
 
-      {/* Mobile drawer */}
-      <div className={cn("lg:hidden fixed inset-x-0 top-16 bottom-0 z-40 bg-background overflow-y-auto transition-transform duration-200",
-        mobileOpen ? "translate-x-0" : "translate-x-full")}>
+      {/* Mobile drawer — slides down from header */}
+      <div
+        className={cn(
+          "lg:hidden absolute left-0 right-0 top-full z-40 bg-background border-b border-border overflow-hidden transition-[max-height,opacity] duration-300 ease-out",
+          mobileOpen ? "max-h-[calc(100vh-4rem)] opacity-100 overflow-y-auto" : "max-h-0 opacity-0"
+        )}
+      >
         <div className="px-4 py-4 space-y-1">
           <MobileSection
             label="Platform"
