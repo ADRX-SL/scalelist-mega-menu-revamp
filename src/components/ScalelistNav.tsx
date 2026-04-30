@@ -9,6 +9,13 @@ import {
   Database,
   Users,
   ChevronDown,
+  FileText,
+  Youtube,
+  GraduationCap,
+  HelpCircle,
+  Gift,
+  Target,
+  Users2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -50,18 +57,41 @@ const features: FeatureItem[] = [
   { title: "API", description: "Build on Scalelist.", href: "#", Icon: Code2 },
 ];
 
+type ResourceItem = {
+  title: string;
+  href: string;
+  Icon: React.ComponentType<{ className?: string }>;
+  iconClass?: string;
+};
+
+const resources: ResourceItem[] = [
+  { title: "Blog", href: "#", Icon: FileText, iconClass: "text-foreground" },
+  { title: "Youtube", href: "#", Icon: Youtube, iconClass: "text-red-500" },
+  { title: "Academy", href: "#", Icon: GraduationCap, iconClass: "text-blue-600" },
+  { title: "Help Center", href: "#", Icon: HelpCircle, iconClass: "text-muted-foreground" },
+  { title: "Affiliate Program", href: "#", Icon: Gift, iconClass: "text-pink-500" },
+  { title: "For Sales", href: "#", Icon: Target, iconClass: "text-red-500" },
+  { title: "For Founders", href: "#", Icon: Users2, iconClass: "text-indigo-500" },
+];
+
+type MenuKey = "platform" | "resources" | null;
+
 export function ScalelistNav() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<MenuKey>(null);
   const closeTimer = useRef<number | null>(null);
 
-  const handleEnter = () => {
+  const handleEnter = (key: Exclude<MenuKey, null>) => {
     if (closeTimer.current) window.clearTimeout(closeTimer.current);
-    setOpen(true);
+    setOpen(key);
   };
 
   const handleLeave = () => {
     if (closeTimer.current) window.clearTimeout(closeTimer.current);
-    closeTimer.current = window.setTimeout(() => setOpen(false), 120);
+    closeTimer.current = window.setTimeout(() => setOpen(null), 120);
+  };
+
+  const keepOpen = () => {
+    if (closeTimer.current) window.clearTimeout(closeTimer.current);
   };
 
   useEffect(() => {
@@ -86,28 +116,40 @@ export function ScalelistNav() {
         {/* Center nav */}
         <ul className="flex items-center gap-1">
           <li
-            onMouseEnter={handleEnter}
+            onMouseEnter={() => handleEnter("platform")}
             onMouseLeave={handleLeave}
             className="relative"
           >
             <button
               type="button"
-              aria-expanded={open}
+              aria-expanded={open === "platform"}
               className={cn(
                 "inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium text-foreground transition-colors",
                 "hover:bg-muted",
-                open && "bg-muted",
+                open === "platform" && "bg-muted",
               )}
             >
               Platform
-              <ChevronDown className={cn("h-4 w-4 transition-transform", open && "rotate-180")} />
+              <ChevronDown className={cn("h-4 w-4 transition-transform", open === "platform" && "rotate-180")} />
             </button>
           </li>
-          <li>
-            <a href="#" className="inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium text-foreground hover:bg-muted">
+          <li
+            onMouseEnter={() => handleEnter("resources")}
+            onMouseLeave={handleLeave}
+            className="relative"
+          >
+            <button
+              type="button"
+              aria-expanded={open === "resources"}
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium text-foreground transition-colors",
+                "hover:bg-muted",
+                open === "resources" && "bg-muted",
+              )}
+            >
               Resources
-              <ChevronDown className="h-4 w-4" />
-            </a>
+              <ChevronDown className={cn("h-4 w-4 transition-transform", open === "resources" && "rotate-180")} />
+            </button>
           </li>
           <li>
             <a href="#" className="rounded-md px-4 py-2 text-sm font-medium text-foreground hover:bg-muted">
@@ -135,14 +177,14 @@ export function ScalelistNav() {
         </div>
       </nav>
 
-      {/* Mega menu — full width */}
+      {/* Platform mega menu — full width */}
       <div
-        onMouseEnter={handleEnter}
+        onMouseEnter={keepOpen}
         onMouseLeave={handleLeave}
         className={cn(
           "absolute left-0 right-0 top-full w-full origin-top border-b border-border bg-background shadow-[0_24px_40px_-24px_hsl(var(--foreground)/0.18)]",
           "transition-all duration-200 ease-out",
-          open ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0",
+          open === "platform" ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0",
         )}
       >
         <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-12 px-6 py-10 lg:grid-cols-12">
@@ -200,6 +242,38 @@ export function ScalelistNav() {
               ))}
             </ul>
           </section>
+        </div>
+      </div>
+
+      {/* Resources mega menu — full width */}
+      <div
+        onMouseEnter={keepOpen}
+        onMouseLeave={handleLeave}
+        className={cn(
+          "absolute left-0 right-0 top-full w-full origin-top border-b border-border bg-background shadow-[0_24px_40px_-24px_hsl(var(--foreground)/0.18)]",
+          "transition-all duration-200 ease-out",
+          open === "resources" ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0",
+        )}
+      >
+        <div className="mx-auto w-full max-w-7xl px-6 py-10">
+          <h3 className="mb-5 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+            Resources
+          </h3>
+          <ul className="grid grid-cols-1 gap-x-12 gap-y-1 sm:grid-cols-2">
+            {resources.map(({ title, href, Icon, iconClass }) => (
+              <li key={title}>
+                <a
+                  href={href}
+                  className="group flex items-center gap-3 rounded-lg p-3 transition-colors hover:bg-muted"
+                >
+                  <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-background">
+                    <Icon className={cn("h-5 w-5", iconClass ?? "text-foreground")} />
+                  </span>
+                  <span className="text-sm font-semibold text-foreground">{title}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </header>
