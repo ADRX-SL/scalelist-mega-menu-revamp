@@ -9,6 +9,13 @@ import {
   Database,
   Users,
   ChevronDown,
+  FileText,
+  Youtube,
+  GraduationCap,
+  HelpCircle,
+  Gift,
+  Target,
+  Users2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
