@@ -116,28 +116,40 @@ export function ScalelistNav() {
         {/* Center nav */}
         <ul className="flex items-center gap-1">
           <li
-            onMouseEnter={handleEnter}
+            onMouseEnter={() => handleEnter("platform")}
             onMouseLeave={handleLeave}
             className="relative"
           >
             <button
               type="button"
-              aria-expanded={open}
+              aria-expanded={open === "platform"}
               className={cn(
                 "inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium text-foreground transition-colors",
                 "hover:bg-muted",
-                open && "bg-muted",
+                open === "platform" && "bg-muted",
               )}
             >
               Platform
-              <ChevronDown className={cn("h-4 w-4 transition-transform", open && "rotate-180")} />
+              <ChevronDown className={cn("h-4 w-4 transition-transform", open === "platform" && "rotate-180")} />
             </button>
           </li>
-          <li>
-            <a href="#" className="inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium text-foreground hover:bg-muted">
+          <li
+            onMouseEnter={() => handleEnter("resources")}
+            onMouseLeave={handleLeave}
+            className="relative"
+          >
+            <button
+              type="button"
+              aria-expanded={open === "resources"}
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-md px-4 py-2 text-sm font-medium text-foreground transition-colors",
+                "hover:bg-muted",
+                open === "resources" && "bg-muted",
+              )}
+            >
               Resources
-              <ChevronDown className="h-4 w-4" />
-            </a>
+              <ChevronDown className={cn("h-4 w-4 transition-transform", open === "resources" && "rotate-180")} />
+            </button>
           </li>
           <li>
             <a href="#" className="rounded-md px-4 py-2 text-sm font-medium text-foreground hover:bg-muted">
