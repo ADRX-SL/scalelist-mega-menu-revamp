@@ -74,18 +74,24 @@ const resources: ResourceItem[] = [
   { title: "For Founders", href: "#", Icon: Users2, iconClass: "text-indigo-500" },
 ];
 
+type MenuKey = "platform" | "resources" | null;
+
 export function ScalelistNav() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<MenuKey>(null);
   const closeTimer = useRef<number | null>(null);
 
-  const handleEnter = () => {
+  const handleEnter = (key: Exclude<MenuKey, null>) => {
     if (closeTimer.current) window.clearTimeout(closeTimer.current);
-    setOpen(true);
+    setOpen(key);
   };
 
   const handleLeave = () => {
     if (closeTimer.current) window.clearTimeout(closeTimer.current);
-    closeTimer.current = window.setTimeout(() => setOpen(false), 120);
+    closeTimer.current = window.setTimeout(() => setOpen(null), 120);
+  };
+
+  const keepOpen = () => {
+    if (closeTimer.current) window.clearTimeout(closeTimer.current);
   };
 
   useEffect(() => {
