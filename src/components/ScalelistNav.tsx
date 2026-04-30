@@ -177,14 +177,14 @@ export function ScalelistNav() {
         </div>
       </nav>
 
-      {/* Mega menu — full width */}
+      {/* Platform mega menu — full width */}
       <div
-        onMouseEnter={handleEnter}
+        onMouseEnter={keepOpen}
         onMouseLeave={handleLeave}
         className={cn(
           "absolute left-0 right-0 top-full w-full origin-top border-b border-border bg-background shadow-[0_24px_40px_-24px_hsl(var(--foreground)/0.18)]",
           "transition-all duration-200 ease-out",
-          open ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0",
+          open === "platform" ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0",
         )}
       >
         <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-12 px-6 py-10 lg:grid-cols-12">
@@ -242,6 +242,38 @@ export function ScalelistNav() {
               ))}
             </ul>
           </section>
+        </div>
+      </div>
+
+      {/* Resources mega menu — full width */}
+      <div
+        onMouseEnter={keepOpen}
+        onMouseLeave={handleLeave}
+        className={cn(
+          "absolute left-0 right-0 top-full w-full origin-top border-b border-border bg-background shadow-[0_24px_40px_-24px_hsl(var(--foreground)/0.18)]",
+          "transition-all duration-200 ease-out",
+          open === "resources" ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0",
+        )}
+      >
+        <div className="mx-auto w-full max-w-7xl px-6 py-10">
+          <h3 className="mb-5 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+            Resources
+          </h3>
+          <ul className="grid grid-cols-1 gap-x-12 gap-y-1 sm:grid-cols-2">
+            {resources.map(({ title, href, Icon, iconClass }) => (
+              <li key={title}>
+                <a
+                  href={href}
+                  className="group flex items-center gap-3 rounded-lg p-3 transition-colors hover:bg-muted"
+                >
+                  <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-background">
+                    <Icon className={cn("h-5 w-5", iconClass ?? "text-foreground")} />
+                  </span>
+                  <span className="text-sm font-semibold text-foreground">{title}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </header>
