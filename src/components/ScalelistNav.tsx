@@ -57,6 +57,23 @@ const features: FeatureItem[] = [
   { title: "API", description: "Build on Scalelist.", href: "#", Icon: Code2 },
 ];
 
+type ResourceItem = {
+  title: string;
+  href: string;
+  Icon: React.ComponentType<{ className?: string }>;
+  iconClass?: string;
+};
+
+const resources: ResourceItem[] = [
+  { title: "Blog", href: "#", Icon: FileText, iconClass: "text-foreground" },
+  { title: "Youtube", href: "#", Icon: Youtube, iconClass: "text-red-500" },
+  { title: "Academy", href: "#", Icon: GraduationCap, iconClass: "text-blue-600" },
+  { title: "Help Center", href: "#", Icon: HelpCircle, iconClass: "text-muted-foreground" },
+  { title: "Affiliate Program", href: "#", Icon: Gift, iconClass: "text-pink-500" },
+  { title: "For Sales", href: "#", Icon: Target, iconClass: "text-red-500" },
+  { title: "For Founders", href: "#", Icon: Users2, iconClass: "text-indigo-500" },
+];
+
 export function ScalelistNav() {
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<number | null>(null);
