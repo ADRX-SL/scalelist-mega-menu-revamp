@@ -412,17 +412,24 @@
   });
 
   // Mobile
-  burger.addEventListener('click', function(){
-    var isOpen = mobile.classList.toggle('is-open');
-    burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-  });
-  msecs.forEach(function(sec){
-    var btn = sec.querySelector('.sl-msec-btn');
-    btn.addEventListener('click', function(){
+  nav.addEventListener('click', function(e){
+    var burgerClick = e.target.closest('#slBurger');
+    var sectionButton = e.target.closest('.sl-msec-btn');
+
+    if (burgerClick) {
+      e.preventDefault();
+      var isOpen = nav.classList.toggle('is-mobile-open');
+      burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      if (!isOpen) msecs.forEach(function(s){ s.classList.remove('is-open'); });
+      return;
+    }
+
+    if (sectionButton) {
+      e.preventDefault();
+      var sec = sectionButton.closest('.sl-msec');
       msecs.forEach(function(s){ if (s !== sec) s.classList.remove('is-open'); });
       sec.classList.toggle('is-open');
-    });
+    }
   });
 })();
 </script>
