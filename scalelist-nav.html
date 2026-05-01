@@ -444,6 +444,7 @@
     if (burgerClick) {
       e.preventDefault();
       var isOpen = nav.classList.toggle('is-mobile-open');
+      portal.classList.toggle('is-mobile-open', isOpen);
       burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
       if (!isOpen) msecs.forEach(function(s){ s.classList.remove('is-open'); });
       return;
