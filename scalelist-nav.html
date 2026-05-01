@@ -69,10 +69,11 @@
   .sl-burger[aria-expanded="true"] .icon-open { display: none; }
   .sl-burger[aria-expanded="true"] .icon-close { display: block; }
 
-  /* Mega menus (desktop) */
+  /* Mega menus (desktop) — fixed to viewport so they escape Elementor parent width */
   .sl-mega {
-    position: absolute; left: 0; right: 0; top: 100%;
-    width: 100%;
+    position: fixed; left: 0; right: 0;
+    top: var(--sl-header-bottom, 64px);
+    width: 100vw;
     background: var(--sl-bg);
     border-bottom: 1px solid var(--sl-border);
     box-shadow: var(--sl-shadow);
@@ -80,6 +81,7 @@
     pointer-events: none;
     transition: opacity .2s ease, transform .2s ease;
     display: none;
+    z-index: 49;
   }
   .sl-mega.is-open { opacity: 1; transform: translateY(0); pointer-events: auto; }
   .sl-mega-inner {
@@ -126,15 +128,17 @@
   .ico-indigo { color: #6366f1; }
   .ico-muted { color: var(--sl-muted); }
 
-  /* Mobile drawer (slide down) */
+  /* Mobile drawer (slide down) — fixed to viewport so it spans full width in Elementor */
   .sl-mobile {
-    position: relative; width: 100%;
+    position: fixed; left: 0; right: 0;
+    top: var(--sl-header-bottom, 64px);
+    width: 100vw;
     background: var(--sl-bg); border-bottom: 1px solid var(--sl-border);
     overflow: hidden; max-height: 0; opacity: 0; visibility: hidden;
     transition: max-height .32s ease, opacity .2s ease, visibility .2s ease;
-    z-index: 40;
+    z-index: 49;
   }
-  .sl-nav.is-mobile-open .sl-mobile { max-height: calc(100vh - 64px); opacity: 1; visibility: visible; overflow-y: auto; }
+  .sl-nav.is-mobile-open .sl-mobile { max-height: calc(100vh - var(--sl-header-bottom, 64px)); opacity: 1; visibility: visible; overflow-y: auto; }
   .sl-mobile-inner { padding: 16px; display: flex; flex-direction: column; gap: 4px; }
   .sl-msec { border-bottom: 1px solid var(--sl-border); }
   .sl-msec:last-of-type { border-bottom: 0; }
@@ -379,6 +383,15 @@
   var closeTimer = null;
   var current = null;
 
+  // Keep mega/mobile menus aligned to header bottom (handles Elementor/WP admin bar offsets)
+  function syncHeaderOffset(){
+    var rect = nav.getBoundingClientRect();
+    nav.style.setProperty('--sl-header-bottom', rect.bottom + 'px');
+  }
+  syncHeaderOffset();
+  window.addEventListener('scroll', syncHeaderOffset, { passive: true });
+  window.addEventListener('resize', syncHeaderOffset);
+  if (window.ResizeObserver) { new ResizeObserver(syncHeaderOffset).observe(nav); }
   function openMenu(key){
     current = key;
     triggers.forEach(function(t){ t.setAttribute('aria-expanded', t.dataset.menu === key ? 'true' : 'false'); });
