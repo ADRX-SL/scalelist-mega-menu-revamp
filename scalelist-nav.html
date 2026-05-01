@@ -383,6 +383,15 @@
   var closeTimer = null;
   var current = null;
 
+  // Keep mega/mobile menus aligned to header bottom (handles Elementor/WP admin bar offsets)
+  function syncHeaderOffset(){
+    var rect = nav.getBoundingClientRect();
+    nav.style.setProperty('--sl-header-bottom', rect.bottom + 'px');
+  }
+  syncHeaderOffset();
+  window.addEventListener('scroll', syncHeaderOffset, { passive: true });
+  window.addEventListener('resize', syncHeaderOffset);
+  if (window.ResizeObserver) { new ResizeObserver(syncHeaderOffset).observe(nav); }
   function openMenu(key){
     current = key;
     triggers.forEach(function(t){ t.setAttribute('aria-expanded', t.dataset.menu === key ? 'true' : 'false'); });
