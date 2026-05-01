@@ -436,8 +436,8 @@
     m.addEventListener('mouseleave', scheduleClose);
   });
 
-  // Mobile
-  nav.addEventListener('click', function(e){
+  // Mobile (bind to both header nav and portal so clicks inside the moved drawer still work)
+  function handleMobileClick(e){
     var burgerClick = e.target.closest('#slBurger');
     var sectionButton = e.target.closest('.sl-msec-btn');
 
@@ -456,6 +456,8 @@
       msecs.forEach(function(s){ if (s !== sec) s.classList.remove('is-open'); });
       sec.classList.toggle('is-open');
     }
-  });
+  }
+  nav.addEventListener('click', handleMobileClick);
+  portal.addEventListener('click', handleMobileClick);
 })();
 </script>
