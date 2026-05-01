@@ -2,6 +2,13 @@
   Scalelist Mega Menu — standalone HTML/CSS/JS
   Paste into a WordPress Elementor HTML widget (or any HTML page).
   No external dependencies. Icons are inline SVGs.
+
+  ============================================================
+  ★ EDIT YOUR LINKS IN ONE PLACE ★
+  Scroll down to the <script id="slMenuConfig"> block and edit
+  the URLs there. Each link is defined ONCE and is used for
+  both the desktop mega menu AND the mobile drawer.
+  ============================================================
 -->
 <style>
   .sl-nav, .sl-nav * { box-sizing: border-box; }
@@ -138,9 +145,6 @@
     transition: max-height .32s ease, opacity .2s ease, visibility .2s ease;
     z-index: 2147483647;
   }
-  /* Portal wrapper appended to <body>: must form its own top-level stacking context
-     so children render above hero sections that create their own stacking context
-     (via transform, filter, will-change, isolation, etc. — common in Elementor). */
   .sl-portal {
     position: fixed !important;
     top: 0; left: 0;
@@ -158,25 +162,18 @@
   .sl-nav.is-mobile-open .sl-mobile { max-height: calc(100vh - var(--sl-header-bottom, 64px)); opacity: 1; visibility: visible; overflow-y: auto; }
   .sl-mobile-inner { padding: 16px; display: flex; flex-direction: column; gap: 4px; }
   .sl-msec { border-bottom: 1px solid var(--sl-border); }
-  .sl-msec:last-of-type { border-bottom: 0; }
+  .sl-msec:last-child { border-bottom: 0; }
   .sl-msec-btn {
     width: 100%; display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 16px; border-radius: 6px;
-    font-size: 16px; font-weight: 500; color: var(--sl-fg);
+    padding: 12px 16px; border-radius: 6px; font-size: 16px; font-weight: 500; color: var(--sl-fg);
   }
   .sl-msec-btn:hover { background: var(--sl-hover); }
+  .sl-msec-btn .sl-chev { transition: transform .2s ease; }
+  .sl-msec[aria-expanded="true"] .sl-msec-btn .sl-chev { transform: rotate(180deg); }
   .sl-msec-body { display: none; padding: 0 8px 12px; }
-  .sl-msec.is-open .sl-msec-body { display: block; }
-  .sl-msec.is-open .sl-chev { transform: rotate(180deg); }
-  .sl-mgroup-title {
-    margin: 12px 0 4px; padding: 0 12px;
-    font-size: 12px; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.14em; color: var(--sl-muted);
-  }
-  .sl-mlink {
-    display: block; padding: 12px 16px; border-radius: 6px;
-    font-size: 16px; font-weight: 500; color: var(--sl-fg);
-  }
+  .sl-msec[aria-expanded="true"] .sl-msec-body { display: block; }
+  .sl-mgroup-title { margin: 12px 12px 4px; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sl-muted); }
+  .sl-mlink { display: block; padding: 12px 16px; border-radius: 6px; font-size: 16px; font-weight: 500; color: var(--sl-fg); }
   .sl-mlink:hover { background: var(--sl-hover); }
   .sl-mctas { padding-top: 16px; margin-top: 16px; border-top: 1px solid var(--sl-border); display: flex; flex-direction: column; gap: 8px; }
   .sl-mctas .sl-signup { display: block; text-align: center; padding: 12px 16px; border-radius: 6px; }
@@ -201,7 +198,7 @@
       <span class="sl-logo-text">Scalelist</span>
     </a>
 
-    <ul class="sl-menu">
+    <ul class="sl-menu" id="slMenu">
       <li>
         <button type="button" class="sl-trigger" data-menu="platform" aria-expanded="false">
           Platform
@@ -214,13 +211,13 @@
           <svg class="sl-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
         </button>
       </li>
-      <li><a href="#" class="sl-link">Customers</a></li>
-      <li><a href="#" class="sl-link">Pricing</a></li>
+      <li><a href="#" class="sl-link" data-link="customers">Customers</a></li>
+      <li><a href="#" class="sl-link" data-link="pricing">Pricing</a></li>
     </ul>
 
-    <div class="sl-ctas">
-      <a href="#" class="sl-login">Log in</a>
-      <a href="#" class="sl-signup">Sign up free</a>
+    <div class="sl-ctas" id="slCtas">
+      <a href="#" class="sl-login" data-link="login">Log in</a>
+      <a href="#" class="sl-signup" data-link="signup">Sign up free</a>
     </div>
 
     <button type="button" class="sl-burger" id="slBurger" aria-label="Toggle menu" aria-expanded="false">
@@ -229,187 +226,174 @@
     </button>
   </nav>
 
-  <!-- Platform mega menu -->
-  <div class="sl-mega" data-mega="platform">
-    <div class="sl-mega-inner cols-12">
-      <section>
-        <h3 class="sl-section-title">Overview</h3>
-        <ul class="sl-list">
-          <li>
-            <a href="https://scalelist.com/scalelist-the-field/" class="sl-item">
-              <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg></span>
-              <span class="sl-item-body">
-                <span class="sl-item-title">Our Data</span>
-                <span class="sl-item-desc">Learn more about our data</span>
-              </span>
-            </a>
-          </li>
-          <li>
-            <a href="https://scalelist.com/customers/" class="sl-item">
-              <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-              <span class="sl-item-body">
-                <span class="sl-item-title">Customers</span>
-                <span class="sl-item-desc">See how companies succeed with Scalelist</span>
-              </span>
-            </a>
-          </li>
-        </ul>
-      </section>
-      <div class="sl-divider"></div>
-      <section>
-        <h3 class="sl-section-title">Features</h3>
-        <ul class="sl-list two-col">
-          <li><a href="#" class="sl-item">
-            <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
-            <span class="sl-item-body"><span class="sl-item-title">Email Finder</span><span class="sl-item-desc">Discover contact details.</span></span>
-          </a></li>
-          <li><a href="#" class="sl-item">
-            <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span>
-            <span class="sl-item-body"><span class="sl-item-title">Email Verifier</span><span class="sl-item-desc">Keep bounce rates low.</span></span>
-          </a></li>
-          <li><a href="#" class="sl-item">
-            <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" y1="8" x2="12" y2="8"/><line x1="3.95" y1="6.06" x2="8.54" y2="14"/><line x1="10.88" y1="21.94" x2="15.46" y2="14"/></svg></span>
-            <span class="sl-item-body"><span class="sl-item-title">Chrome Extension</span><span class="sl-item-desc">Data from Anywhere.</span></span>
-          </a></li>
-          <li><a href="#" class="sl-item">
-            <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span>
-            <span class="sl-item-body"><span class="sl-item-title">Lead Mobile Finder</span><span class="sl-item-desc">Reach decision-makers.</span></span>
-          </a></li>
-          <li><a href="#" class="sl-item">
-            <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.439 7.85c-.049.322.059.648.289.878l1.568 1.568c.47.47.706 1.087.706 1.704s-.235 1.233-.706 1.704l-1.611 1.611a.98.98 0 0 1-.837.276c-.47-.07-.802-.48-.968-.925a2.501 2.501 0 1 0-3.214 3.214c.446.166.855.497.925.968a.98.98 0 0 1-.276.837l-1.61 1.61a2.404 2.404 0 0 1-1.705.707 2.402 2.402 0 0 1-1.704-.706l-1.568-1.568a1.026 1.026 0 0 0-.877-.29c-.493.074-.84.504-1.02.968a2.5 2.5 0 1 1-3.237-3.237c.464-.18.894-.527.967-1.02a1.026 1.026 0 0 0-.289-.877l-1.568-1.568A2.402 2.402 0 0 1 1.998 12c0-.617.236-1.234.706-1.704L4.23 8.77c.24-.24.581-.353.917-.303.515.077.877.528 1.073 1.01a2.5 2.5 0 1 0 3.259-3.259c-.482-.196-.933-.558-1.01-1.073-.05-.336.062-.676.303-.917l1.525-1.525A2.402 2.402 0 0 1 12 1.998c.617 0 1.234.236 1.704.706l1.568 1.568c.23.23.556.338.877.29.493-.074.84-.504 1.02-.968a2.5 2.5 0 1 1 3.237 3.237c-.464.18-.894.527-.967 1.02Z"/></svg></span>
-            <span class="sl-item-body"><span class="sl-item-title">Integrations</span><span class="sl-item-desc">Connect CRM tools.</span></span>
-          </a></li>
-          <li><a href="#" class="sl-item">
-            <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span>
-            <span class="sl-item-body"><span class="sl-item-title">API</span><span class="sl-item-desc">Build on Scalelist.</span></span>
-          </a></li>
-        </ul>
-      </section>
-    </div>
-  </div>
-
-  <!-- Resources mega menu -->
-  <div class="sl-mega" data-mega="resources">
-    <div class="sl-mega-inner">
-      <section>
-        <h3 class="sl-section-title">Resources</h3>
-        <ul class="sl-list two-col">
-          <li><a href="#" class="sl-item simple">
-            <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
-            <span class="sl-item-title">Blog</span>
-          </a></li>
-          <li><a href="#" class="sl-item simple">
-            <span class="sl-item-ico ico-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg></span>
-            <span class="sl-item-title">Youtube</span>
-          </a></li>
-          <li><a href="#" class="sl-item simple">
-            <span class="sl-item-ico ico-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span>
-            <span class="sl-item-title">Academy</span>
-          </a></li>
-          <li><a href="#" class="sl-item simple">
-            <span class="sl-item-ico ico-muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
-            <span class="sl-item-title">Help Center</span>
-          </a></li>
-          <li><a href="#" class="sl-item simple">
-            <span class="sl-item-ico ico-pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></span>
-            <span class="sl-item-title">Affiliate Program</span>
-          </a></li>
-          <li><a href="#" class="sl-item simple">
-            <span class="sl-item-ico ico-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
-            <span class="sl-item-title">For Sales</span>
-          </a></li>
-          <li><a href="#" class="sl-item simple">
-            <span class="sl-item-ico ico-indigo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-            <span class="sl-item-title">For Founders</span>
-          </a></li>
-        </ul>
-      </section>
-    </div>
-  </div>
-
-  <!-- Mobile drawer -->
-  <div class="sl-mobile" id="slMobile">
-    <div class="sl-mobile-inner">
-      <div class="sl-msec" data-msec="platform">
-        <button type="button" class="sl-msec-btn">
-          Platform
-          <svg class="sl-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </button>
-        <div class="sl-msec-body">
-          <div class="sl-mgroup-title">Overview</div>
-          <ul class="sl-list">
-            <li><a href="https://scalelist.com/scalelist-the-field/" class="sl-item">
-              <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg></span>
-              <span class="sl-item-body"><span class="sl-item-title">Our Data</span><span class="sl-item-desc">Learn more about our data</span></span>
-            </a></li>
-            <li><a href="https://scalelist.com/customers/" class="sl-item">
-              <span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-              <span class="sl-item-body"><span class="sl-item-title">Customers</span><span class="sl-item-desc">See how companies succeed with Scalelist</span></span>
-            </a></li>
-          </ul>
-          <div class="sl-mgroup-title">Features</div>
-          <ul class="sl-list">
-            <li><a href="#" class="sl-item"><span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span><span class="sl-item-body"><span class="sl-item-title">Email Finder</span><span class="sl-item-desc">Discover contact details.</span></span></a></li>
-            <li><a href="#" class="sl-item"><span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></span><span class="sl-item-body"><span class="sl-item-title">Email Verifier</span><span class="sl-item-desc">Keep bounce rates low.</span></span></a></li>
-            <li><a href="#" class="sl-item"><span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" y1="8" x2="12" y2="8"/><line x1="3.95" y1="6.06" x2="8.54" y2="14"/><line x1="10.88" y1="21.94" x2="15.46" y2="14"/></svg></span><span class="sl-item-body"><span class="sl-item-title">Chrome Extension</span><span class="sl-item-desc">Data from Anywhere.</span></span></a></li>
-            <li><a href="#" class="sl-item"><span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></span><span class="sl-item-body"><span class="sl-item-title">Lead Mobile Finder</span><span class="sl-item-desc">Reach decision-makers.</span></span></a></li>
-            <li><a href="#" class="sl-item"><span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span><span class="sl-item-body"><span class="sl-item-title">Integrations</span><span class="sl-item-desc">Connect CRM tools.</span></span></a></li>
-            <li><a href="#" class="sl-item"><span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></span><span class="sl-item-body"><span class="sl-item-title">API</span><span class="sl-item-desc">Build on Scalelist.</span></span></a></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="sl-msec" data-msec="resources">
-        <button type="button" class="sl-msec-btn">
-          Resources
-          <svg class="sl-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-        </button>
-        <div class="sl-msec-body">
-          <ul class="sl-list">
-            <li><a href="#" class="sl-item simple"><span class="sl-item-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span><span class="sl-item-title">Blog</span></a></li>
-            <li><a href="#" class="sl-item simple"><span class="sl-item-ico ico-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg></span><span class="sl-item-title">Youtube</span></a></li>
-            <li><a href="#" class="sl-item simple"><span class="sl-item-ico ico-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><span class="sl-item-title">Academy</span></a></li>
-            <li><a href="#" class="sl-item simple"><span class="sl-item-ico ico-muted"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span><span class="sl-item-title">Help Center</span></a></li>
-            <li><a href="#" class="sl-item simple"><span class="sl-item-ico ico-pink"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/></svg></span><span class="sl-item-title">Affiliate Program</span></a></li>
-            <li><a href="#" class="sl-item simple"><span class="sl-item-ico ico-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span><span class="sl-item-title">For Sales</span></a></li>
-            <li><a href="#" class="sl-item simple"><span class="sl-item-ico ico-indigo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg></span><span class="sl-item-title">For Founders</span></a></li>
-          </ul>
-        </div>
-      </div>
-
-      <a href="#" class="sl-mlink">Customers</a>
-      <a href="#" class="sl-mlink">Pricing</a>
-
-      <div class="sl-mctas">
-        <a href="#" class="sl-mlink">Log in</a>
-        <a href="#" class="sl-signup">Sign up free</a>
-      </div>
-    </div>
-  </div>
+  <!-- Desktop mega menus + mobile drawer are generated by JS from the config below.
+       This way each URL is defined exactly ONCE. -->
+  <div id="slMenuMount"></div>
 </header>
+
+<!--
+  ============================================================
+  ★★★  EDIT YOUR LINKS HERE — ONE PLACE ONLY  ★★★
+  Just change the "href" values below. Each link is rendered
+  in BOTH the desktop mega menu AND the mobile drawer.
+  ============================================================
+-->
+<script id="slMenuConfig" type="application/json">
+{
+  "topLevel": {
+    "customers": "#",
+    "pricing": "#",
+    "login": "#",
+    "signup": "#"
+  },
+  "platform": {
+    "overview": [
+      {
+        "title": "Our Data",
+        "desc": "Learn more about our data",
+        "href": "https://scalelist.com/scalelist-the-field/",
+        "icon": "data"
+      },
+      {
+        "title": "Customers",
+        "desc": "See how companies succeed with Scalelist",
+        "href": "https://scalelist.com/customers/",
+        "icon": "users"
+      }
+    ],
+    "features": [
+      { "title": "Email Finder",        "desc": "Discover contact details.", "href": "#", "icon": "search" },
+      { "title": "Email Verifier",      "desc": "Keep bounce rates low.",    "href": "#", "icon": "check" },
+      { "title": "Chrome Extension",    "desc": "Data from Anywhere.",       "href": "#", "icon": "chrome" },
+      { "title": "Lead Mobile Finder",  "desc": "Reach decision-makers.",    "href": "#", "icon": "phone" },
+      { "title": "Integrations",        "desc": "Connect CRM tools.",        "href": "#", "icon": "puzzle" },
+      { "title": "API",                 "desc": "Build on Scalelist.",       "href": "#", "icon": "code" }
+    ]
+  },
+  "resources": [
+    { "title": "Blog",              "href": "#", "icon": "file",     "iconClass": "" },
+    { "title": "Youtube",           "href": "#", "icon": "youtube",  "iconClass": "ico-red" },
+    { "title": "Academy",           "href": "#", "icon": "academy",  "iconClass": "ico-blue" },
+    { "title": "Help Center",       "href": "#", "icon": "help",     "iconClass": "ico-muted" },
+    { "title": "Affiliate Program", "href": "#", "icon": "gift",     "iconClass": "ico-pink" },
+    { "title": "For Sales",         "href": "#", "icon": "target",   "iconClass": "ico-red" },
+    { "title": "For Founders",      "href": "#", "icon": "founders", "iconClass": "ico-indigo" }
+  ]
+}
+</script>
 
 <script>
 (function(){
   var nav = document.getElementById('slNav');
   if (!nav) return;
+  var mount = document.getElementById('slMenuMount');
+  var menu = document.getElementById('slMenu');
+  var ctas = document.getElementById('slCtas');
+  var burger = document.getElementById('slBurger');
+
+  // ---- Read link config ----
+  var cfg;
+  try { cfg = JSON.parse(document.getElementById('slMenuConfig').textContent); }
+  catch(e) { console.error('Scalelist nav: invalid JSON config', e); return; }
+
+  // ---- Icon library (inline SVG strings) ----
+  var ICONS = {
+    data:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg>',
+    users:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+    search:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
+    check:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>',
+    chrome:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" y1="8" x2="12" y2="8"/><line x1="3.95" y1="6.06" x2="8.54" y2="14"/><line x1="10.88" y1="21.94" x2="15.46" y2="14"/></svg>',
+    phone:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>',
+    puzzle:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+    code:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+    file:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+    youtube: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/></svg>',
+    academy: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
+    help:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+    gift:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 12 20 22 4 22 4 12"/><rect x="2" y="7" width="20" height="5"/><line x1="12" y1="22" x2="12" y2="7"/></svg>',
+    target:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+    founders:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>'
+  };
+  function ico(name, cls){ return '<span class="sl-item-ico'+(cls?' '+cls:'')+'">'+(ICONS[name]||'')+'</span>'; }
+  function esc(s){ return String(s||'').replace(/[&<>"']/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]); }); }
+
+  // ---- Apply top-level link hrefs ----
+  Object.keys(cfg.topLevel||{}).forEach(function(key){
+    nav.querySelectorAll('[data-link="'+key+'"]').forEach(function(a){ a.setAttribute('href', cfg.topLevel[key]); });
+  });
+
+  // ---- Render desktop mega menus ----
+  function renderItem(it){
+    return '<li><a href="'+esc(it.href)+'" class="sl-item">'+ico(it.icon)+
+      '<span class="sl-item-body"><span class="sl-item-title">'+esc(it.title)+'</span>'+
+      (it.desc?'<span class="sl-item-desc">'+esc(it.desc)+'</span>':'')+
+      '</span></a></li>';
+  }
+  function renderSimple(it){
+    return '<li><a href="'+esc(it.href)+'" class="sl-item simple">'+ico(it.icon, it.iconClass)+
+      '<span class="sl-item-title">'+esc(it.title)+'</span></a></li>';
+  }
+
+  var platformHTML =
+    '<div class="sl-mega" data-mega="platform"><div class="sl-mega-inner cols-12">'+
+      '<section><h3 class="sl-section-title">Overview</h3><ul class="sl-list">'+
+        cfg.platform.overview.map(renderItem).join('')+
+      '</ul></section>'+
+      '<div class="sl-divider"></div>'+
+      '<section><h3 class="sl-section-title">Features</h3><ul class="sl-list two-col">'+
+        cfg.platform.features.map(renderItem).join('')+
+      '</ul></section>'+
+    '</div></div>';
+
+  var resourcesHTML =
+    '<div class="sl-mega" data-mega="resources"><div class="sl-mega-inner">'+
+      '<section><h3 class="sl-section-title">Resources</h3><ul class="sl-list two-col">'+
+        cfg.resources.map(renderSimple).join('')+
+      '</ul></section>'+
+    '</div></div>';
+
+  // ---- Render mobile drawer ----
+  var mobileHTML =
+    '<div class="sl-mobile" id="slMobile"><div class="sl-mobile-inner">'+
+      '<div class="sl-msec" data-msec="platform">'+
+        '<button type="button" class="sl-msec-btn">Platform'+
+          '<svg class="sl-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>'+
+        '</button>'+
+        '<div class="sl-msec-body">'+
+          '<div class="sl-mgroup-title">Overview</div><ul class="sl-list">'+cfg.platform.overview.map(renderItem).join('')+'</ul>'+
+          '<div class="sl-mgroup-title">Features</div><ul class="sl-list">'+cfg.platform.features.map(renderItem).join('')+'</ul>'+
+        '</div>'+
+      '</div>'+
+      '<div class="sl-msec" data-msec="resources">'+
+        '<button type="button" class="sl-msec-btn">Resources'+
+          '<svg class="sl-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>'+
+        '</button>'+
+        '<div class="sl-msec-body"><ul class="sl-list">'+cfg.resources.map(renderSimple).join('')+'</ul></div>'+
+      '</div>'+
+      '<a href="'+esc(cfg.topLevel.customers)+'" class="sl-mlink">Customers</a>'+
+      '<a href="'+esc(cfg.topLevel.pricing)+'" class="sl-mlink">Pricing</a>'+
+      '<div class="sl-mctas">'+
+        '<a href="'+esc(cfg.topLevel.login)+'" class="sl-mlink">Log in</a>'+
+        '<a href="'+esc(cfg.topLevel.signup)+'" class="sl-signup">Sign up free</a>'+
+      '</div>'+
+    '</div></div>';
+
+  mount.innerHTML = platformHTML + resourcesHTML + mobileHTML;
+
   var triggers = nav.querySelectorAll('.sl-trigger');
   var megas = nav.querySelectorAll('.sl-mega');
-  var burger = document.getElementById('slBurger');
   var mobile = document.getElementById('slMobile');
-  var msecs = nav.querySelectorAll('.sl-msec');
   var closeTimer = null;
   var current = null;
 
   // Move mega menus + mobile drawer to <body> so they escape any transformed
   // Elementor parent (transformed ancestors break position:fixed viewport sizing).
-  // We keep a wrapper with class "sl-nav" around them so all scoped CSS still applies.
   var portal = document.createElement('div');
   portal.className = 'sl-nav sl-portal';
   megas.forEach(function(m){ portal.appendChild(m); });
   if (mobile) portal.appendChild(mobile);
   document.body.appendChild(portal);
 
-  // Keep mega/mobile menus aligned to header bottom (handles Elementor/WP admin bar offsets)
   function syncHeaderOffset(){
     var rect = nav.getBoundingClientRect();
     var bottomPx = rect.bottom + 'px';
@@ -420,6 +404,7 @@
   window.addEventListener('scroll', syncHeaderOffset, { passive: true });
   window.addEventListener('resize', syncHeaderOffset);
   if (window.ResizeObserver) { new ResizeObserver(syncHeaderOffset).observe(nav); }
+
   function openMenu(key){
     current = key;
     triggers.forEach(function(t){ t.setAttribute('aria-expanded', t.dataset.menu === key ? 'true' : 'false'); });
@@ -430,13 +415,8 @@
     triggers.forEach(function(t){ t.setAttribute('aria-expanded', 'false'); });
     megas.forEach(function(m){ m.classList.remove('is-open'); });
   }
-  function scheduleClose(){
-    if (closeTimer) clearTimeout(closeTimer);
-    closeTimer = setTimeout(closeMenu, 120);
-  }
-  function cancelClose(){
-    if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; }
-  }
+  function scheduleClose(){ if (closeTimer) clearTimeout(closeTimer); closeTimer = setTimeout(closeMenu, 120); }
+  function cancelClose(){ if (closeTimer) { clearTimeout(closeTimer); closeTimer = null; } }
 
   triggers.forEach(function(t){
     var li = t.parentElement;
@@ -452,25 +432,21 @@
     m.addEventListener('mouseleave', scheduleClose);
   });
 
-  // Mobile (bind to both header nav and portal so clicks inside the moved drawer still work)
   function handleMobileClick(e){
     var burgerClick = e.target.closest('#slBurger');
     var sectionButton = e.target.closest('.sl-msec-btn');
-
     if (burgerClick) {
-      e.preventDefault();
-      var isOpen = nav.classList.toggle('is-mobile-open');
+      var isOpen = !nav.classList.contains('is-mobile-open');
+      nav.classList.toggle('is-mobile-open', isOpen);
       portal.classList.toggle('is-mobile-open', isOpen);
       burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      if (!isOpen) msecs.forEach(function(s){ s.classList.remove('is-open'); });
       return;
     }
-
     if (sectionButton) {
-      e.preventDefault();
-      var sec = sectionButton.closest('.sl-msec');
-      msecs.forEach(function(s){ if (s !== sec) s.classList.remove('is-open'); });
-      sec.classList.toggle('is-open');
+      var sec = sectionButton.parentElement;
+      var open = sec.getAttribute('aria-expanded') === 'true';
+      portal.querySelectorAll('.sl-msec').forEach(function(s){ s.setAttribute('aria-expanded', 'false'); });
+      sec.setAttribute('aria-expanded', open ? 'false' : 'true');
     }
   }
   nav.addEventListener('click', handleMobileClick);
