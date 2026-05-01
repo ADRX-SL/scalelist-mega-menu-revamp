@@ -69,10 +69,11 @@
   .sl-burger[aria-expanded="true"] .icon-open { display: none; }
   .sl-burger[aria-expanded="true"] .icon-close { display: block; }
 
-  /* Mega menus (desktop) */
+  /* Mega menus (desktop) — fixed to viewport so they escape Elementor parent width */
   .sl-mega {
-    position: absolute; left: 0; right: 0; top: 100%;
-    width: 100%;
+    position: fixed; left: 0; right: 0;
+    top: var(--sl-header-bottom, 64px);
+    width: 100vw;
     background: var(--sl-bg);
     border-bottom: 1px solid var(--sl-border);
     box-shadow: var(--sl-shadow);
@@ -80,6 +81,7 @@
     pointer-events: none;
     transition: opacity .2s ease, transform .2s ease;
     display: none;
+    z-index: 49;
   }
   .sl-mega.is-open { opacity: 1; transform: translateY(0); pointer-events: auto; }
   .sl-mega-inner {
