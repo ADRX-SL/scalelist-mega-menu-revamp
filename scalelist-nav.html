@@ -383,10 +383,22 @@
   var closeTimer = null;
   var current = null;
 
+  // Move mega menus + mobile drawer to <body> so they escape any transformed
+  // Elementor parent (transformed ancestors break position:fixed viewport sizing).
+  // We keep a wrapper with class "sl-nav" around them so all scoped CSS still applies.
+  var portal = document.createElement('div');
+  portal.className = 'sl-nav sl-portal';
+  portal.style.cssText = 'position:static;';
+  megas.forEach(function(m){ portal.appendChild(m); });
+  if (mobile) portal.appendChild(mobile);
+  document.body.appendChild(portal);
+
   // Keep mega/mobile menus aligned to header bottom (handles Elementor/WP admin bar offsets)
   function syncHeaderOffset(){
     var rect = nav.getBoundingClientRect();
-    nav.style.setProperty('--sl-header-bottom', rect.bottom + 'px');
+    var bottomPx = rect.bottom + 'px';
+    nav.style.setProperty('--sl-header-bottom', bottomPx);
+    portal.style.setProperty('--sl-header-bottom', bottomPx);
   }
   syncHeaderOffset();
   window.addEventListener('scroll', syncHeaderOffset, { passive: true });
@@ -424,14 +436,15 @@
     m.addEventListener('mouseleave', scheduleClose);
   });
 
-  // Mobile
-  nav.addEventListener('click', function(e){
+  // Mobile (bind to both header nav and portal so clicks inside the moved drawer still work)
+  function handleMobileClick(e){
     var burgerClick = e.target.closest('#slBurger');
     var sectionButton = e.target.closest('.sl-msec-btn');
 
     if (burgerClick) {
       e.preventDefault();
       var isOpen = nav.classList.toggle('is-mobile-open');
+      portal.classList.toggle('is-mobile-open', isOpen);
       burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
       if (!isOpen) msecs.forEach(function(s){ s.classList.remove('is-open'); });
       return;
@@ -443,6 +456,8 @@
       msecs.forEach(function(s){ if (s !== sec) s.classList.remove('is-open'); });
       sec.classList.toggle('is-open');
     }
-  });
+  }
+  nav.addEventListener('click', handleMobileClick);
+  portal.addEventListener('click', handleMobileClick);
 })();
 </script>
