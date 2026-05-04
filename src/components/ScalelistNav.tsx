@@ -44,13 +44,11 @@ const features: Item[] = [
 ];
 
 const resources: Item[] = [
-  { title: "Blog", href: "#", Icon: FileText, iconClass: "text-foreground" },
-  { title: "Youtube", href: "#", Icon: Youtube, iconClass: "text-red-500" },
-  { title: "Academy", href: "#", Icon: GraduationCap, iconClass: "text-blue-600" },
-  { title: "Help Center", href: "#", Icon: HelpCircle, iconClass: "text-muted-foreground" },
-  { title: "Affiliate Program", href: "#", Icon: Gift, iconClass: "text-pink-500" },
-  { title: "For Sales", href: "#", Icon: Target, iconClass: "text-red-500" },
-  { title: "For Founders", href: "#", Icon: Users2, iconClass: "text-indigo-500" },
+  { title: "Blog", description: "Read our latest guides.", href: "#", Icon: FileText },
+  { title: "Academy", description: "Learn how to use Scalelist.", href: "#", Icon: GraduationCap },
+  { title: "Affiliate Program", description: "Partner with Scalelist.", href: "#", Icon: Gift },
+  { title: "Youtube", description: "Watch Scalelist tutorials.", href: "#", Icon: Youtube },
+  { title: "Help Center", description: "Get product support.", href: "#", Icon: HelpCircle },
 ];
 
 type MenuKey = "platform" | "resources" | null;
@@ -180,11 +178,14 @@ export function ScalelistNav() {
         <div className="mx-auto w-full max-w-7xl px-6 py-10">
           <h3 className="mb-5 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Resources</h3>
           <ul className="grid grid-cols-1 gap-x-12 gap-y-1 sm:grid-cols-2">
-            {resources.map(({ title, href, Icon, iconClass }) => (
+            {resources.map(({ title, description, href, Icon }) => (
               <li key={title}>
-                <a href={href} className="group flex items-center gap-3 rounded-lg p-3 transition-colors hover:bg-muted">
-                  <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-background"><Icon className={cn("h-5 w-5", iconClass ?? "text-foreground")} /></span>
-                  <span className="text-sm font-semibold text-foreground">{title}</span>
+                <a href={href} className="group flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-muted">
+                  <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-background text-foreground"><Icon className="h-4.5 w-4.5" /></span>
+                  <span className="flex flex-col">
+                    <span className="text-sm font-semibold text-foreground">{title}</span>
+                    <span className="text-sm text-muted-foreground">{description}</span>
+                  </span>
                 </a>
               </li>
             ))}
@@ -214,16 +215,7 @@ export function ScalelistNav() {
             isOpen={mobileSection === "resources"}
             onToggle={() => setMobileSection(s => s === "resources" ? null : "resources")}
           >
-            <ul className="space-y-1 pl-1">
-              {resources.map(({ title, href, Icon, iconClass }) => (
-                <li key={title}>
-                  <a href={href} className="flex items-center gap-3 rounded-lg p-3 hover:bg-muted">
-                    <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border"><Icon className={cn("h-5 w-5", iconClass ?? "text-foreground")} /></span>
-                    <span className="text-sm font-semibold text-foreground">{title}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <MobileGroup title="Resources" items={resources} />
           </MobileSection>
 
           <a href="#" className="block rounded-md px-4 py-3 text-base font-medium text-foreground hover:bg-muted">Customers</a>
