@@ -178,11 +178,14 @@ export function ScalelistNav() {
         <div className="mx-auto w-full max-w-7xl px-6 py-10">
           <h3 className="mb-5 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Resources</h3>
           <ul className="grid grid-cols-1 gap-x-12 gap-y-1 sm:grid-cols-2">
-            {resources.map(({ title, href, Icon, iconClass }) => (
+            {resources.map(({ title, description, href, Icon }) => (
               <li key={title}>
-                <a href={href} className="group flex items-center gap-3 rounded-lg p-3 transition-colors hover:bg-muted">
-                  <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-background"><Icon className={cn("h-5 w-5", iconClass ?? "text-foreground")} /></span>
-                  <span className="text-sm font-semibold text-foreground">{title}</span>
+                <a href={href} className="group flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-muted">
+                  <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-background text-foreground"><Icon className="h-4.5 w-4.5" /></span>
+                  <span className="flex flex-col">
+                    <span className="text-sm font-semibold text-foreground">{title}</span>
+                    <span className="text-sm text-muted-foreground">{description}</span>
+                  </span>
                 </a>
               </li>
             ))}
