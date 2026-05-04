@@ -215,16 +215,7 @@ export function ScalelistNav() {
             isOpen={mobileSection === "resources"}
             onToggle={() => setMobileSection(s => s === "resources" ? null : "resources")}
           >
-            <ul className="space-y-1 pl-1">
-              {resources.map(({ title, href, Icon, iconClass }) => (
-                <li key={title}>
-                  <a href={href} className="flex items-center gap-3 rounded-lg p-3 hover:bg-muted">
-                    <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border"><Icon className={cn("h-5 w-5", iconClass ?? "text-foreground")} /></span>
-                    <span className="text-sm font-semibold text-foreground">{title}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <MobileGroup title="Resources" items={resources} />
           </MobileSection>
 
           <a href="#" className="block rounded-md px-4 py-3 text-base font-medium text-foreground hover:bg-muted">Customers</a>
