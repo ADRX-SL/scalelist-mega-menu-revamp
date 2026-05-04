@@ -44,13 +44,11 @@ const features: Item[] = [
 ];
 
 const resources: Item[] = [
-  { title: "Blog", href: "#", Icon: FileText, iconClass: "text-foreground" },
-  { title: "Youtube", href: "#", Icon: Youtube, iconClass: "text-red-500" },
-  { title: "Academy", href: "#", Icon: GraduationCap, iconClass: "text-blue-600" },
-  { title: "Help Center", href: "#", Icon: HelpCircle, iconClass: "text-muted-foreground" },
-  { title: "Affiliate Program", href: "#", Icon: Gift, iconClass: "text-pink-500" },
-  { title: "For Sales", href: "#", Icon: Target, iconClass: "text-red-500" },
-  { title: "For Founders", href: "#", Icon: Users2, iconClass: "text-indigo-500" },
+  { title: "Blog", description: "Read our latest guides.", href: "#", Icon: FileText },
+  { title: "Academy", description: "Learn how to use Scalelist.", href: "#", Icon: GraduationCap },
+  { title: "Affiliate Program", description: "Partner with Scalelist.", href: "#", Icon: Gift },
+  { title: "Youtube", description: "Watch Scalelist tutorials.", href: "#", Icon: Youtube },
+  { title: "Help Center", description: "Get product support.", href: "#", Icon: HelpCircle },
 ];
 
 type MenuKey = "platform" | "resources" | null;
