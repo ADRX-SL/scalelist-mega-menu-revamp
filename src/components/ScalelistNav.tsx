@@ -143,8 +143,8 @@ export function ScalelistNav() {
       <div onMouseEnter={keepOpen} onMouseLeave={handleLeave}
         className={cn("absolute left-0 right-0 top-full hidden lg:block w-full border-b border-border bg-background shadow-[0_24px_40px_-24px_hsl(var(--foreground)/0.18)] transition-all duration-200 ease-out",
           open === "platform" ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0")}>
-        <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-12 px-6 py-10 lg:grid-cols-12">
-          <section className="lg:col-span-4">
+        <div className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 px-6 py-10 lg:grid-cols-[3fr_1px_4fr_1px_6fr]">
+          <section>
             <h3 className="mb-5 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Overview</h3>
             <ul className="space-y-1">
               {overview.map(({ title, description, href, Icon }) => (
@@ -160,8 +160,25 @@ export function ScalelistNav() {
               ))}
             </ul>
           </section>
-          <div className="hidden lg:col-span-1 lg:block"><div className="mx-auto h-full w-px bg-border" /></div>
-          <section className="lg:col-span-7">
+          <div className="hidden lg:block h-full w-px bg-border" />
+          <section>
+            <h3 className="mb-5 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Use Cases</h3>
+            <ul className="space-y-1">
+              {useCases.map(({ title, description, href, Icon }) => (
+                <li key={title}>
+                  <a href={href} className="group flex items-start gap-3 rounded-lg p-3 transition-colors hover:bg-muted">
+                    <span className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-border bg-background text-foreground"><Icon className="h-4.5 w-4.5" /></span>
+                    <span className="flex flex-col">
+                      <span className="text-sm font-semibold text-foreground">{title}</span>
+                      <span className="text-sm text-muted-foreground">{description}</span>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+          <div className="hidden lg:block h-full w-px bg-border" />
+          <section>
             <h3 className="mb-5 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">Features</h3>
             <ul className="grid grid-cols-1 gap-1 sm:grid-cols-2">
               {features.map(({ title, description, href, Icon }) => (
