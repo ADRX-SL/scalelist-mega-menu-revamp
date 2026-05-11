@@ -233,6 +233,7 @@ export function ScalelistNav() {
             onToggle={() => setMobileSection(s => s === "platform" ? null : "platform")}
           >
             <MobileGroup title="Overview" items={overview} />
+            <MobileGroup title="Use Cases" items={useCases} />
             <MobileGroup title="Features" items={features} />
           </MobileSection>
 
