@@ -14,8 +14,10 @@ import {
   GraduationCap,
   HelpCircle,
   Gift,
+  Megaphone,
   Target,
-  Users2,
+  Settings,
+  Building2,
   Menu,
   X,
 } from "lucide-react";
