@@ -45,6 +45,13 @@ const features: Item[] = [
   { title: "API", description: "Build on Scalelist.", href: "#", Icon: Code2 },
 ];
 
+const useCases: Item[] = [
+  { title: "Outbound Agencies", description: "Run high-volume campaigns.", href: "#", Icon: Megaphone },
+  { title: "Sales & Marketing Teams", description: "Hit pipeline targets faster.", href: "#", Icon: Target },
+  { title: "Revenue Operations (RevOps) Teams", description: "Automate data workflows.", href: "#", Icon: Settings },
+  { title: "SaaS Reseller Platforms", description: "Resell data at scale.", href: "#", Icon: Building2 },
+];
+
 const resources: Item[] = [
   { title: "Blog", description: "Read our latest guides.", href: "#", Icon: FileText },
   { title: "Academy", description: "Learn how to use Scalelist.", href: "#", Icon: GraduationCap },
