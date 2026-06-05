@@ -44,6 +44,7 @@ const features: Item[] = [
   { title: "Lead Mobile Finder", description: "Reach decision-makers.", href: "#", Icon: Smartphone },
   { title: "Integrations", description: "Connect CRM tools.", href: "#", Icon: Puzzle },
   { title: "API", description: "Build on Scalelist.", href: "#", Icon: Code2 },
+  { title: "MCP Server", description: "Connect AI agents to Scalelist.", href: "#", Icon: Server },
 ];
 
 const useCases: Item[] = [
