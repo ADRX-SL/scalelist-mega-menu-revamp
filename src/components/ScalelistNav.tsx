@@ -6,6 +6,7 @@ import {
   Smartphone,
   Puzzle,
   Code2,
+  Server,
   Database,
   Users,
   ChevronDown,
